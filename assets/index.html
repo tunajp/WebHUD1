@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>title</title>
+        <script>
+            function gatDate() {
+                const date = new Date();
+                const date2 = date.getFullYear() + "年" +
+                    (date.getMonth() + 1)  + "月" +
+                    date.getDate() + "日" +
+                    date.getHours() + "時" +
+                    date.getMinutes() + "分" +
+                    date.getSeconds() + "秒" +
+                    date.getMilliseconds() + "ミリ秒";
+                return date2;
+            }
+            function getParam(name, url) {
+                if (!url) {
+                    url = window.location.href;
+                }
+                name = name.replace(/[\[\]]/g, "\\$&");
+                let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
+
+            window.addEventListener("DOMContentLoaded", (event) => {
+                // TODO:fetchして初期状態を取得する
+
+                const btnElement = document.querySelector("#push");
+                btnElement.addEventListener("click", () => {
+                    console.log(gatDate());
+
+                    const http_in_url = getParam("url");
+                    const url = window.location.protocol +
+                        "//" +
+                        window.location.host +
+                        window.location.pathname +
+                        "?url=" + http_in_url;
+                    console.log(url);
+
+                    const obj = {Name: "push"};
+                    const method = "POST";
+                    const body = JSON.stringify(obj);
+                    const headers = {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    };
+                    fetch(url, {method, headers, body})
+                        .then((res)=> {
+                            //return res.json();
+                            return res.text();
+                        })
+                        .then( (data) => {
+                            console.log(data);
+                            const resElement = document.querySelector("#res");
+                            resElement.textContent = data;
+                            alert("success:"+ data);
+                        }).
+                        catch((error) => {
+                            console.log(error);
+                            alert("error:"+ error);
+                        });
+
+                })
+            });
+        </script>
+    </head>
+    <body>
+        <div>Hello!</div>
+        <button id="push">push</button>
+        <div id="res"></div>
+    </body>
+</html>
