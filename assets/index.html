@@ -58,7 +58,7 @@
                         .then( (data) => {
                             console.log(data);
                             const resElement = document.querySelector("#res");
-                            resElement.textContent = data;
+                            resElement.textContent = gatDate() + data;
                             //alert("success:"+ data); // sl内のcefでは表示されない
                         }).
                         catch((error) => {
