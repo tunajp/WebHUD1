@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>title</title>
         <script>
             function gatDate() {
@@ -58,11 +59,11 @@
                             console.log(data);
                             const resElement = document.querySelector("#res");
                             resElement.textContent = data;
-                            alert("success:"+ data);
+                            //alert("success:"+ data); // sl内のcefでは表示されない
                         }).
                         catch((error) => {
                             console.log(error);
-                            alert("error:"+ error);
+                            //alert("error:"+ error); // sl内のcefでは表示されない
                         });
 
                 })
