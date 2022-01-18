@@ -59,13 +59,18 @@ http.createServer( (request, response) => {
             let data = JSON.parse(post);
             console.log(data);
 
-            console.log(data.Name);
+            //console.log(data.Name);
+            console.dir(data);
 
             // http-inに投げる
             // rezするとスクリプトが動いてないみたいだが、HUDとして身につければurlが再発行される
             // ->on_rezでllResetScript()を呼べば解決した
-
-            fetch(http_in_url, {method: 'GET', agent})
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+            const body = JSON.stringify(data);
+            fetch(http_in_url, {method: 'POST', headers, body, agent})
                 .then((res) => {
                     if (!res.ok) {
                         // 200 系以外のレスポンスはエラーとして処理
