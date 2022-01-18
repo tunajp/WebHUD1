@@ -44,8 +44,9 @@ http.createServer( (request, response) => {
             throw "Undefined url parameter";
         }
     } catch (error) {
-        errorRespontse(response, error);
-        return;
+        // TODO:jsの読み込みにURLパラメータがない件は後で考える
+        //errorRespontse(response, error);
+        //return;
     }
 
     // curl -X POST -H "Content-Type: application/json" -d '{"Name":"sensuikan1973", "Age":"100"}' "http://localhost:8080/api/v1/users?id=10&url=https://www.google.com"
@@ -94,11 +95,12 @@ http.createServer( (request, response) => {
         const request_file = request.url.split("?").shift();
 
         let filePath = ASSETS_DIR + request_file;
+        console.log(filePath);
 
         if (filePath == ASSETS_DIR + "/") { // TODO:下のディレクトリでも/終わりなら処理する
             filePath = ASSETS_DIR + "/index.html"
         }
-        console.log(filePath);
+        console.log("readfile:" + filePath);
 
         let extname = String(path.extname(filePath)).toLocaleLowerCase();
         const mimeTypes = {
