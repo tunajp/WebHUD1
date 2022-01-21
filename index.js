@@ -32,25 +32,40 @@ http.createServer( (request, response) => {
 
     let http_in_url;
 
-    // curl localhost:8080/?url=https://hoge
-    // POSTでもGETのパラメータは取得できるので常にURLパラメータにurl=http-inのurlをつければいい
-    // prim側はURLが変わるたびにメディアをリロードすればいい
-    try {
-        const url_parse = url.parse(request.url, true);
-        console.log(url_parse);
-        http_in_url = url_parse.query['url'];
-        console.log(http_in_url);
-        if (http_in_url == undefined) {
-            throw "Undefined url parameter";
-        }
-    } catch (error) {
-        // TODO:jsの読み込みにURLパラメータがない件は後で考える
-        //errorRespontse(response, error);
-        //return;
-    }
-
     // curl -X POST -H "Content-Type: application/json" -d '{"Name":"sensuikan1973", "Age":"100"}' "http://localhost:8080/api/v1/users?id=10&url=https://www.google.com"
     if (request.method === "POST") {
+
+        // curl localhost:8080/?url=https://hoge
+        // POSTでもGETのパラメータは取得できるので常にURLパラメータにurl=http-inのurlをつければいい
+        // prim側はURLが変わるたびにメディアをリロードすればいい
+        try {
+            const url_parse = url.parse(request.url, true);
+            console.log(url_parse);
+            http_in_url = url_parse.query['url'];
+            console.log(http_in_url);
+            if (http_in_url == undefined) {
+                throw "Undefined url parameter";
+            }
+
+            // security url check
+            // https://simhost-xxxx.agni.secondlife.io:12043/cap/xxxx-xxxx-xxxx-xxxx
+            let checkuri = new URL(http_in_url);
+            let domain = checkuri.hostname;
+            let parts = domain.toString().split('.'.toString());
+            console.log(parts[parts.length - 2]);
+            if (parts[parts.length - 2] != "secondlife") {
+                console.log("NOT SECONDLIFE");
+                throw "NOT SECONDLIFE";
+                return;
+            } else {
+                console.log("SECONDLIFE");
+            }
+        } catch (error) {
+            console.log(error);
+            errorRespontse(response, error);
+            return;
+        }
+
         let post = "";
         request.on('data', (chunk) => {
             post += chunk;
